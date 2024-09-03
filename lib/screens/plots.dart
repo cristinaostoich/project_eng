@@ -7,24 +7,16 @@ import 'cigarette_counter.dart';
 import 'package:progetto/charts/plot_creation.dart';
 
 
-
-
 class Plots extends StatefulWidget {
   final String accountName;
-
-
 
 
   Plots({required this.accountName});
 
 
-
-
   @override
   _PlotsState createState() => _PlotsState();
 }
-
-
 
 
 class _PlotsState extends State<Plots> {
@@ -40,15 +32,27 @@ class _PlotsState extends State<Plots> {
   double dailyNicotineTarget = 0.0;
 
 
-
-
   @override
   void initState() {
     super.initState();
     _loadRegistrationData();
+
+    ////////////////RIMETTI IN CASO/////////////////
+    //Aggiorna i contatori all'avvio della schermata
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
+      cigaretteCounter.resetCountersIfNeeded();
+    });
   }
 
+  //@override
+  //void didChangeDependencies() {
+  //  super.didChangeDependencies();
 
+    // Assicurati che i contatori siano aggiornati ogni volta che cambia lo stato
+  //  final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
+  //  cigaretteCounter.resetCountersIfNeeded();
+  //}
 
 
   Future<void> _loadRegistrationData() async {
@@ -57,12 +61,8 @@ class _PlotsState extends State<Plots> {
       String? usersData = prefs.getString('users');
 
 
-
-
       Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
       //final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen:false);
-
-
 
 
       if (users.containsKey(widget.accountName)) {
@@ -73,8 +73,6 @@ class _PlotsState extends State<Plots> {
         threshold = _cigarettesPerDay; //threshold initialization
 
 
-
-
         if (dateStr != null) {
           registrationDate = DateTime.parse(dateStr);
         } else {
@@ -82,22 +80,14 @@ class _PlotsState extends State<Plots> {
         }
 
 
-
-
         // Calcola quanti giorni sono passati dalla registrazione
         if (registrationDate != null) {
           int daysSinceRegistration = DateTime.now().difference(registrationDate!).inDays;
-
-
-
 
           // Decrementa la soglia di 1 per ogni 7 giorni passati
           threshold -= (daysSinceRegistration ~/ 7);
           if (threshold < 0) threshold = 0; // La soglia non può andare sotto 0
         }
-
-
-
 
         await _generateChartData(users);
         await _generateHourlyData(users);
@@ -114,8 +104,6 @@ class _PlotsState extends State<Plots> {
   }
 
 
-
-
   Future<void> _generateChartData(Map<String, dynamic> users) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String dailyCountsKey = "${widget.accountName}_dailyCounts";
@@ -124,169 +112,105 @@ class _PlotsState extends State<Plots> {
     double dailyNicotineTarget = threshold * _nicotine; // Calcola la soglia giornaliera
 
 
-
-
-
-
     if (registrationDate != null) {
-      DateTime startDate = registrationDate!;
-      data = [];
       DateTime now = DateTime.now();
+      DateTime startDate = registrationDate!;
+      DateTime endDate = DateTime(startDate.year, startDate.month, startDate.day + _cigarettesPerDay*7);
 
-
-
+      data = [];
 
       int totalCigarettes = 0;
       double nicotineSmokedToday = 0.0;
-      //int daysToGenerate = _cigarettesPerDay*7;
 
-
-      int daysToGenerate = now.difference(startDate).inDays + 1;
-
-
+      int daysToGenerate = _cigarettesPerDay * 7;
+      DateTime roundedDate = DateTime(now.year, now.month, now.day);
 
 
       for (int i = 0; i < daysToGenerate; i++) {
         DateTime currentDate = startDate.add(Duration(days: i));
         String dateKey = "${widget.accountName}_cigarettes_${currentDate.year}${currentDate.month}${currentDate.day}";
         double cigarettes = dailyCounts[dateKey]?.toDouble() ?? 0.0;
-        //totalCigarettes += cigarettes.toInt();
-        //nicotineSmokedToday += totalCigarettes * _nicotine;
-        //print('nicotineSmokedToday ${nicotineSmokedToday}');
-        //print('nicotine ${_nicotine}');
-        //print('total cigarettes ${totalCigarettes}');
-
 
         data.add(NicotineLevel(date: currentDate, level: cigarettes));
       }
 
-
       final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
       data.add(NicotineLevel(date: now, level: cigaretteCounter.cigarettesSmokedToday.toDouble()));
       totalCigarettes += cigaretteCounter.cigarettesSmokedToday;
-      //nicotineSmokedToday = totalCigarettes * _nicotine;
-      //double cigarettesToday = cigaretteCounter.nicotineSmokedToday.toDouble();
-      //nicotineSmokedToday = totalCigarettes * _nicotine;
-      //print('nicotineSmokedToday ${nicotineSmokedToday}');
-      //print('prova: ${cigaretteCounter.nicotineSmokedToday}');
-      print('prova2: ${cigaretteCounter.cigarettesSmokedToday}');  //OK VA BENE
-      nicotineSmokedToday = totalCigarettes * _nicotine;
-      int futureDays = totalCigarettes * 7;
 
+      nicotineSmokedToday = totalCigarettes * _nicotine;
+      int futureDays = -(now.difference(endDate).inDays);
 
       for (int i = 1; i <= futureDays; i++) {
         DateTime futureDate = now.add(Duration(days: i));
         data.add(NicotineLevel(date: futureDate, level: 0.0));
       }
       setState(() {
-        // Questa variabile sarà usata per mostrare il conteggio nel widget
+        //will be used to show the counter in the widget
         this.nicotineSmokedToday = nicotineSmokedToday;
         this.dailyNicotineTarget = dailyNicotineTarget;
       });
-
-
     }
   }
-
-
 
 
   Future<void> _generateHourlyData(Map<String, dynamic> users) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-   
-    // Recupera i dati di configurazione dalle SharedPreferences
-    // MODIFICARE: OGNI 7 GIORNI DALLA DATA DI REGISTRAZIONE, LA SOGLIA DECRESCE DEL VALORE _nicotine
-    //double dailyNicotineTarget = _cigarettesPerDay * _nicotine; // Calcola la soglia giornaliera
     String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
     String? hourlyCountsData = prefs.getString(hourlyCountsKey);
-    Map<String, int> hourlyCounts = hourlyCountsData != null ? Map<String, int>.from(json.decode(hourlyCountsData)) : {};
+    Map<String, int> hourlyCounts = hourlyCountsData != null
+        ? Map<String, int>.from(json.decode(hourlyCountsData))
+        : {};
     DateTime now = DateTime.now();
-    DateTime startOfDay = DateTime(now.year, now.month, now.day);
+    DateTime startOfDay = DateTime(now.year, now.month, now.day); //hourly chart refers to today's date
     hourlyData = [];
 
-
-    //int totalCigarettes = 0;
-    int hoursToGenerate = now.difference(startOfDay).inHours + 1;
-
-
-    // Variabile per tenere traccia della nicotina fumata oggi
-    //double nicotineSmokedToday = 0.0;
+    int hoursToGenerate = 24;
+    DateTime roundedHour= DateTime(now.year, now.month, now.day, now.hour);
+    int cigarettesSmokedThisHour = 0;
     double nicotineSmokedThisHour = 0.0;
-    //Set<String> keys = prefs.getKeys();
 
 
+    for (int i = 0; i <= hoursToGenerate; i++) {
+      DateTime currentHour = startOfDay.add(Duration(hours: i));
+      String hourlyKey = "${widget.accountName}_hourly_cigarettes_${currentHour.year}${currentHour.month}${currentHour.day}${currentHour.hour}";
+      double cigarettes = hourlyCounts[hourlyKey]?.toDouble() ?? 0.0;
+      hourlyData.add(HourlyNicotineLevel(time: currentHour, level: cigarettes));
 
-
-    // Raccogli tutte le sigarette fumate dal salvataggio
-        DateTime hour = DateTime(now.year, now.month, now.day, now.hour);
-
-
-
-
-        for (int i = 0; i < hoursToGenerate; i++) {
-          DateTime currentHour = startOfDay.add(Duration(hours: i));
-          String hourKey = "${widget.accountName}_cigarettes_${currentHour.year}${currentHour.month}${currentHour.day}${currentHour.hour}";
-          double cigarettes = hourlyCounts[hourKey]?.toDouble() ?? 0.0;
-          //totalCigarettes += cigarettes.toInt();
-          nicotineSmokedThisHour += cigarettes.toInt();
-          //nicotineSmokedToday += cigarettes.toInt();
-
-
-          // Aggiungi i dati giornalieri
-          hourlyData.add(HourlyNicotineLevel(time: hour, level: cigarettes));
-
-
-          // Aggiorna il conteggio della nicotina oraria fumata se la data coincide
-          if (currentHour.hour == now.hour &&
-            currentHour.day == now.day &&
-            currentHour.month == now.month &&
-            currentHour.year == now.year) {
-              nicotineSmokedThisHour += cigarettes;
-              //nicotineSmokedToday += cigarettes;
-            }
-          }
-
-
-   
-    // Aggiorna il totale di nicotina fumata oggi con i dati odierni
-    final nicotineCounter = Provider.of<CigaretteCounter>(context, listen: false);
-    hourlyData.add(HourlyNicotineLevel(time: now, level: nicotineCounter.hourlyNicotine));
-    double nicotineThisHour = nicotineCounter.hourlyNicotine.toDouble();
-    nicotineSmokedThisHour += nicotineThisHour;
-
-
-    hourlyData.add(HourlyNicotineLevel(time: now, level: nicotineThisHour));
-    nicotineSmokedThisHour += nicotineCounter.hourlyNicotine.toInt();
-    //nicotineSmokedToday += nicotineCounter.nicotineSmokedToday.toInt();
-   
-
-
-    int futureHours = 12; //visualize even hours;
-
-
-    // Aggiungi i dati futuri
-    for (int i = 1; i <= futureHours; i++) {
-      DateTime futureHours = now.add(Duration(hours: i));
-      hourlyData.add(HourlyNicotineLevel(time: futureHours, level: 0.0));
+      if (currentHour.hour == now.hour &&
+          currentHour.day == now.day &&
+          currentHour.month == now.month &&
+          currentHour.year == now.year) {
+        nicotineSmokedThisHour += cigarettes;
+      }
     }
 
+    //adds data of current hour
+    final nicotineCounter = Provider.of<CigaretteCounter>(context, listen: false);
+    hourlyData.add(HourlyNicotineLevel(time: now, level: nicotineCounter.hourlyNicotine));
+    nicotineSmokedThisHour += nicotineCounter.hourlyNicotine.toDouble();
+    cigarettesSmokedThisHour += nicotineCounter.hourlyCigarettesSmoked;
 
-    // Aggiorna lo stato per riflettere i nuovi dati
+    //adds future data (for future hours)
+    DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
+
+    int futureHours = (tomorrow.difference(roundedHour)).inHours;
+    for (int i = 1; i <= futureHours; i++) {
+      DateTime futureHour = now.add(Duration(hours: i));
+      futureHour = DateTime(futureHour.year, futureHour.month, futureHour.day, futureHour.hour);
+      hourlyData.add(HourlyNicotineLevel(time: futureHour, level: 0.0));
+    }
+
+    //updates state w/ hourly data
     setState(() {
-      // Questa variabile sarà usata per mostrare il conteggio nel widget
-      //this.nicotineSmokedToday = nicotineSmokedToday;
-      //this.dailyNicotineTarget = dailyNicotineTarget;
       this.nicotineSmokedThisHour = nicotineSmokedThisHour;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
     final cigaretteCounter = Provider.of<CigaretteCounter>(context);
     DateTime now = DateTime.now();
-
-
 
 
     return Scaffold(

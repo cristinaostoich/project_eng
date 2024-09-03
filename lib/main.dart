@@ -3,11 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:progetto/screens/cigarette_counter.dart';
 import 'package:progetto/screens/homepage.dart';
 
-
 void main() {
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -17,7 +15,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CigaretteCounter()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Nicotine Tracker',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-
 class ModifyPage extends StatefulWidget {
   final String accountName;
   final String cigaretteType;
   final double nicotine;
-
 
   ModifyPage({
     required this.accountName,
@@ -15,16 +13,13 @@ class ModifyPage extends StatefulWidget {
     required this.nicotine,
   });
 
-
   @override
   _ModifyPageState createState() => _ModifyPageState();
 }
 
-
 class _ModifyPageState extends State<ModifyPage> {
   String? _selectedCigaretteType;
   double? _nicotine;
-
 
   @override
   void initState() {
@@ -32,7 +27,6 @@ class _ModifyPageState extends State<ModifyPage> {
     _selectedCigaretteType = widget.cigaretteType;
     _nicotine = widget.nicotine;
   }
-
 
   Future<void> _saveChanges() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,7 +39,6 @@ class _ModifyPageState extends State<ModifyPage> {
       users[widget.accountName]['Nicotine'] = _nicotine;
       await prefs.setString('users', json.encode(users));
     }
-
 
     Navigator.pop(context);
   }

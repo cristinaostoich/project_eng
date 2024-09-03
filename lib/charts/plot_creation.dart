@@ -2,19 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 
-
-
-// Definisci la classe NicotineLevel
 class NicotineLevel {
   final DateTime date;
   final double level;
 
-
-
-
   NicotineLevel({required this.date, required this.level});
 }
-
 
 class NicotineChart extends StatelessWidget {
   final List<charts.Series<NicotineLevel, DateTime>> seriesList;
@@ -35,21 +28,13 @@ class NicotineChart extends StatelessWidget {
   });
 
 
-
-
   @override
   Widget build(BuildContext context) {
-    // Calcola la data di inizio e di fine basate sulla data di registrazione e sul numero di sigarette
-    //DateTime fixedStartDate = registrationDate;
-    //DateTime fixedEndDate = registrationDate.add(Duration(days: cigarettesPerDay * 7 + 1));
-
 
     DateTime fixedStartDate =
-        registrationDate.subtract(Duration(days: 1)); // Un giorno prima
+        registrationDate.subtract(Duration(days: 1));
     DateTime fixedEndDate = registrationDate
-        .add(Duration(days: cigarettesPerDay * 7 + 2)); // Un giorno dopo
-
-
+        .add(Duration(days: cigarettesPerDay * 7));
 
 
     return charts.TimeSeriesChart(
@@ -94,15 +79,13 @@ class NicotineChart extends StatelessWidget {
   }
 
 
-
-
   // Crea dati di esempio
   static List<charts.Series<NicotineLevel, DateTime>> createSampleData(List<NicotineLevel> data) {
     return [
       charts.Series<NicotineLevel, DateTime>(
         id: 'Nicotine Level',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (NicotineLevel levels, _) => DateTime(levels.date.year, levels.date.month, levels.date.day), // Ignora le ore
+        domainFn: (NicotineLevel levels, _) => DateTime(levels.date.year, levels.date.month, levels.date.day), //ignores hours
         measureFn: (NicotineLevel levels, _) => levels.level,
         data: data,
       )
@@ -113,12 +96,10 @@ class NicotineChart extends StatelessWidget {
 
 class HourlyNicotineLevel {
   final DateTime time;
-  final double level;
-
+  double level;
 
   HourlyNicotineLevel({required this.time, required this.level});
 }
-
 
 
 class HourlyNicotineChart extends StatelessWidget {
@@ -132,7 +113,7 @@ class HourlyNicotineChart extends StatelessWidget {
     required this.nicotineSmokedThisHour,
   });
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -173,16 +154,13 @@ class HourlyNicotineChart extends StatelessWidget {
             primaryMeasureAxis: charts.NumericAxisSpec(
               tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: 10),
             ),
-            // Usa BarRendererConfig per un grafico a barre
             defaultRenderer: charts.BarRendererConfig<DateTime>(
-              groupingType: charts.BarGroupingType.grouped, // Barre raggruppate per ogni ora
+              groupingType: charts.BarGroupingType.grouped,
               cornerStrategy: const charts.ConstCornerStrategy(20),
             ),
+
           ),
         ),
-
-        // Conteggio giornaliero della nicotina
-
       ],
     );
   }
@@ -191,7 +169,7 @@ class HourlyNicotineChart extends StatelessWidget {
     return [
       charts.Series<HourlyNicotineLevel, DateTime>(
         id: 'Hourly Nicotine Level',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (HourlyNicotineLevel levels, _) => DateTime(levels.time.year, levels.time.month, levels.time.day, levels.time.hour),
         measureFn: (HourlyNicotineLevel levels, _) => levels.level,
         data: data,
