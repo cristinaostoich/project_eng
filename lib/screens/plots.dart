@@ -80,13 +80,13 @@ class _PlotsState extends State<Plots> {
         }
 
 
-        // Calcola quanti giorni sono passati dalla registrazione
+        //cauculates number of days from registration
         if (registrationDate != null) {
           int daysSinceRegistration = DateTime.now().difference(registrationDate!).inDays;
 
-          // Decrementa la soglia di 1 per ogni 7 giorni passati
+          //decreases threshold by one every 7 days from registration
           threshold -= (daysSinceRegistration ~/ 7);
-          if (threshold < 0) threshold = 0; // La soglia non può andare sotto 0
+          if (threshold < 0) threshold = 0; // threshold cannot be <0
         }
 
         await _generateChartData(users);

@@ -37,15 +37,15 @@ class CigaretteCounter with ChangeNotifier {
   /////////PENSA SE USARE UNA FUNZIONE SIMILE ANCHE PER IL CONTEGGIO GIORNALIERO///////////////
   void updateHourlyCount(int count, double nicotine) async {
     DateTime now = DateTime.now();
-    if (now.difference(_lastHourlyUpdate).inHours != 0) {
+    if (now.difference(_lastHourlyUpdate).inHours == 0) { /////////QUI ERA != 0 MA NON HA SENSO
       _hourlyCigarettesSmoked = count;
       _hourlyNicotine = nicotine;
       _lastHourlyUpdate = now;
       await _saveHourlyData(count, nicotine, now); // Save the updated hourly data
     } else {
-      _hourlyCigarettesSmoked = count;
-      _hourlyNicotine = nicotine;
-      await _saveHourlyData(count, nicotine, now); // Save the updated hourly data
+      _hourlyCigarettesSmoked = 0; //era count
+      _hourlyNicotine = 0.0; //era nicotine
+      await _saveHourlyData(0, 0.0, now); // Save the updated hourly data, qui erano (count, nicotine, now)
     }
     notifyListeners();
   }

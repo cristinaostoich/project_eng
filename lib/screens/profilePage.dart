@@ -67,14 +67,15 @@ class _ProfilePageState extends State<ProfilePage> {
     String hourlyKey = _getHourlyKey();
     String hourlyNicotineKey = _getHourlyNicotineKey();
 
-    int newCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday; //prima era +1
-    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked + 1;
+    int newCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday ; //prima era +1
+    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked +1; //prima era +1
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
 
 
     await _recordCigaretteTime(); //FORSE POSSO RIMUOVERE?
 
     _saveDailyCount(newCount);
+    _checkAndResetDailyCounter();
 
     hourlyNicotine += _nicotine ?? 0.0;
 
@@ -107,7 +108,10 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(newCount);
       });
       _saveDailyCount(newCount);
+      _checkAndResetDailyCounter();
       ////////IN CASO AGGIUNGI FUNZIONE CHECK AND RESET DAILY COUNTER////////////////////////////////////
+      
+      //hourlyNicotine -= _nicotine ?? 0.0;
 
       if (currentCountH > 0) {
         int newCountH = currentCountH - 1;
@@ -163,12 +167,32 @@ class _ProfilePageState extends State<ProfilePage> {
     DateTime now = DateTime.now();
 
     DateTime lastUpdate = DateTime.parse(prefs.getString(lastUpdateKey) ?? now.toIso8601String());
+    //print('last update: $lastUpdate');
 
     if (now.difference(lastUpdate).inHours != 0) {
       prefs.setInt(hourlyKey, 0);
       prefs.setDouble(hourlyNicotineKey, 0.0);
       Provider.of<CigaretteCounter>(context, listen: false).updateHourlyCount(0, 0.0);
       prefs.setString(lastUpdateKey, now.toIso8601String());
+    }
+  }
+
+////////GIIUNTO IO QUESTO METODO, IN CASO TOGLIAMO
+    Future<void> _checkAndResetDailyCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String dailyKey = _getHourlyKey();
+    String lastUpdateKeyDays = "${widget.accountName}_lastHourlyUpdateDays";
+    DateTime now = DateTime.now();
+
+    DateTime lastUpdateDays = DateTime.parse(prefs.getString(lastUpdateKeyDays) ?? now.toIso8601String());
+    //print('last update: $lastUpdate');
+    DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
+
+
+    if (now.difference(tomorrow).inDays != 0) {
+      prefs.setInt(dailyKey, 0);
+      //Provider.of<CigaretteCounter>(context, listen: false).updateDailyCount(0, 0.0);
+      prefs.setString(lastUpdateKeyDays, now.toIso8601String());
     }
   }
 
@@ -309,10 +333,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(width: 20),
-                Text(
-                  'Hourly: ${cigaretteProvider.hourlyCigarettesSmoked}',
-                  style: TextStyle(fontSize: 24),
-                ),
+                //Text(
+                //  'Hourly: ${cigaretteProvider.hourlyCigarettesSmoked}',
+                //  style: TextStyle(fontSize: 24),
+                //),
               ],
             ),
             SizedBox(height: 20),
