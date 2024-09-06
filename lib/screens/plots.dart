@@ -186,10 +186,10 @@ class _PlotsState extends State<Plots> {
     }
 
     //adds data of current hour
-    final nicotineCounter = Provider.of<CigaretteCounter>(context, listen: false);
-    hourlyData.add(HourlyNicotineLevel(time: now, level: nicotineCounter.hourlyNicotine));
-    nicotineSmokedThisHour += nicotineCounter.hourlyNicotine.toDouble();
-    cigarettesSmokedThisHour += nicotineCounter.hourlyCigarettesSmoked;
+    final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
+    hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
+    nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
+    cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
 
     //adds future data (for future hours)
     DateTime tomorrow = DateTime(now.year, now.month, now.day +1);

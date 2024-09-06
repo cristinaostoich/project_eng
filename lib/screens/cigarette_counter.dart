@@ -72,6 +72,7 @@ class CigaretteCounter with ChangeNotifier {
   }
     hourlyData[key] = nicotine; // Save nicotine level
     await prefs.setString('hourlyData', json.encode(hourlyData));
+    //print('hourly data: $existingData');
   }
 
 
