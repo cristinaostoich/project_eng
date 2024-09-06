@@ -207,28 +207,29 @@ class _PlotsState extends State<Plots> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final cigaretteCounter = Provider.of<CigaretteCounter>(context);
-    DateTime now = DateTime.now();
+@override
+Widget build(BuildContext context) {
+  final cigaretteCounter = Provider.of<CigaretteCounter>(context);
+  DateTime now = DateTime.now();
 
-
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 79, 149, 240),
-      appBar: AppBar(
-        title: Text(
-          'Plots',
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.white,
-          ),),
-          backgroundColor: Color.fromARGB(255, 79, 149, 240),
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.white,),
+  return Scaffold(
+    backgroundColor: Color.fromARGB(255, 79, 149, 240),
+    appBar: AppBar(
+      title: Text(
+        'Plots',
+        style: TextStyle(
+          fontSize: 30,
+          color: Colors.white,
+        ),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
+      backgroundColor: Color.fromARGB(255, 79, 149, 240),
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+    body: isLoading
+        ? Center(child: CircularProgressIndicator())
+        : SingleChildScrollView( // Avvolgi il contenuto con un SingleChildScrollView
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Column(
                 children: <Widget>[
@@ -241,7 +242,8 @@ class _PlotsState extends State<Plots> {
                           'Cigarettes smoked today: ${cigaretteCounter.cigarettesSmokedToday}/$threshold',
                           style: TextStyle(
                             fontSize: 20,
-                            color: Colors.white,),
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -271,7 +273,8 @@ class _PlotsState extends State<Plots> {
                         'Slide horizontally to view more data',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,),
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -283,7 +286,8 @@ class _PlotsState extends State<Plots> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,),
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Container(
@@ -301,12 +305,14 @@ class _PlotsState extends State<Plots> {
                       'Nicotine smoked today: ${nicotineSmokedToday.toStringAsFixed(1)} / ${dailyNicotineTarget.toStringAsFixed(1)} mg',
                       style: TextStyle(
                         fontSize: 20,
-                        color: Colors.white,),
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-    );
-  }
+          ),
+  );
+}
 }
