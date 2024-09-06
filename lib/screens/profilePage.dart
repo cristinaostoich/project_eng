@@ -280,8 +280,20 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final cigaretteProvider = Provider.of<CigaretteCounter>(context);
     return Scaffold(
-      backgroundColor: Colors.lightGreenAccent, // Light green background
-      appBar: AppBar(title: Text('Profile')),
+      backgroundColor: Color.fromARGB(255, 79, 149, 240),
+      appBar: AppBar(
+        title: Text(
+          'Profile',
+          //textAlign:TextAlign.center,
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 79, 149, 240),
+        elevation: 0,
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -291,18 +303,22 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 fontSize: 32, 
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
+            SizedBox(height: 28),
             Text(
               'Cigarette Type: $_cigaretteType',
               style: TextStyle(
-                fontSize: 16, 
+                fontSize: 18,
+                color: Colors.white,
               ),
             ),
             Text(
               'What do you want to do?',
               style: TextStyle(
-                fontSize: 20, 
+                fontSize: 18,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 20),
@@ -322,10 +338,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                side: BorderSide(color: Colors.green, width: 2), // Dark edges
+                backgroundColor: Color.fromARGB(255, 118, 174, 249),
+                side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
                 textStyle: TextStyle(fontSize: 20),
-                foregroundColor: Colors.green[900], // Dark green text color
+                foregroundColor: Color.fromARGB(255, 25, 73, 113),
               ),
               child: Text('Modify Profile'),
             ),
@@ -337,10 +354,11 @@ class _ProfilePageState extends State<ProfilePage> {
               _incrementCigaretteCount();
             },
             style: ElevatedButton.styleFrom(
-              side: BorderSide(color: Colors.green, width: 2), // Dark edges
+              backgroundColor: Color.fromARGB(255, 118, 174, 249),
+              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
-              textStyle: TextStyle(fontSize: 20), //era 20
-              foregroundColor: Colors.green[900], // Dark green text color
+              textStyle: TextStyle(fontSize: 20),
+              foregroundColor: Color.fromARGB(255, 25, 73, 113),
 
             ),
             child: Text('Add a Cigarette'),
@@ -354,11 +372,11 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.all(0), 
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.green, width: 2.5),
+                border: Border.all(color: Color.fromARGB(255, 35, 99, 150), width: 2),
               ),
               child: Icon(
                 Icons.remove,
-                color: Colors.green,
+                color: Color.fromARGB(255, 35, 99, 150),
                 size: 30, 
               ),
             ),
@@ -374,10 +392,11 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             },
             style: ElevatedButton.styleFrom(
-              side: BorderSide(color: Colors.green, width: 2), // Dark edges
+              backgroundColor: Color.fromARGB(255, 118, 174, 249),
+              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
               textStyle: TextStyle(fontSize: 20),
-              foregroundColor: Colors.green[900],
+              foregroundColor: Color.fromARGB(255, 25, 73, 113),
             ),
              child: Text('Your Progress'),
           ),
@@ -386,7 +405,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Text(
             'Cigarettes Smoked Today: ${cigaretteProvider.cigarettesSmokedToday}',              
               style: TextStyle(
-              fontSize: 20, 
+              fontSize: 18,
+              color: Colors.white,
             ),
           ),
         ],
@@ -401,20 +421,22 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: _showDeleteConfirmation,
               child: Icon(Icons.delete, size: 30), 
               style: ElevatedButton.styleFrom(
-                side: BorderSide(color: Colors.green, width: 2),
-                shadowColor: Colors.green,
+                backgroundColor: Color.fromARGB(255, 118, 174, 249),
+                side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
+                shadowColor: Colors.blue,
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                foregroundColor: Colors.green[900], 
+                foregroundColor: Color.fromARGB(255, 25, 73, 113), 
               ),
             ),
             ElevatedButton(
               onPressed: _logout,
               child: Icon(Icons.logout, size: 30), 
               style: ElevatedButton.styleFrom(
-                side: BorderSide(color: Colors.green, width: 2),
-                shadowColor: Colors.green,
+                backgroundColor: Color.fromARGB(255, 118, 174, 249),
+                side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
+                shadowColor: Colors.blue,
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                foregroundColor: Colors.green[900],
+                foregroundColor: Color.fromARGB(255, 25, 73, 113),
               ),
             ),
             Text(

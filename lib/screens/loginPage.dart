@@ -40,20 +40,20 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // set background color
-      backgroundColor: Colors.lightGreenAccent,
-
+      backgroundColor: Color.fromARGB(255, 79, 149, 240),
       appBar: AppBar(
         title: Text(
           'Login',
-          textAlign: TextAlign.center,
+          //textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 30, // Bigger font size for the title
-            fontWeight: FontWeight.bold, // Optional: Make the text bold
+            color: Colors.white,
+            //fontWeight: FontWeight.bold, // Optional: Make the text bold
           ),
         ),
-        centerTitle: true, // Ensures the title is centered
+        //centerTitle: true, // Ensures the title is centered
         backgroundColor:
-            Colors.lightGreenAccent, // Set the same background color for AppBar
+            Color.fromARGB(255, 79, 149, 240), // Set the same background color for AppBar
         elevation: 0, // Remove shadow for a cleaner look
       ),
 
@@ -67,8 +67,26 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Account name',
-                  labelStyle: TextStyle(fontSize: 20),
+                  labelStyle: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  //hintStyle: TextStyle(color: Colors.white70,),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Colore della riga sotto il campo di testo
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Colore della riga quando il campo è in focus
+                  ),
                 ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+                //textAlign: TextAlign.center, // Allinea il testo all'interno del campo di testo
+                // Optional: Se desideri anche centrare il contenuto
+                //textAlignVertical: TextAlignVertical.center, // Allinea verticalmente il testo
+
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Enter your account name';
@@ -79,12 +97,28 @@ class _LoginPageState extends State<LoginPage> {
                   _accountName = value;
                 },
               ),
+              SizedBox(height: 20),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(fontSize: 20),
+                  labelStyle: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  //hintText: 'Enter your account name',
+                  //hintStyle: TextStyle(color: Colors.white70,),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Colore della riga sotto il campo di testo
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Colore della riga quando il campo è in focus
+                  ),
                 ),
                 obscureText: true,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Enter your password';
@@ -95,16 +129,18 @@ class _LoginPageState extends State<LoginPage> {
                   _password = value;
                 },
               ),
-              SizedBox(height: 40), // space
+              SizedBox(height: 50), // space
               SizedBox(
                 width: 150, // Increase button width-200
                 height: 50, // Increase button height-60
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 118, 174, 249),
                     side: BorderSide(
-                      color: Colors.green, width: 2), // Black edges
+                      color: Color.fromARGB(255, 35, 99, 150), width: 1), // Black edges
                       textStyle: TextStyle(fontSize: 22), // Bigger button text
-                      foregroundColor: Colors.green[900],
+                      foregroundColor: Color.fromARGB(255, 25, 73, 113),
+                      //foregroundColor: Colors.white,
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
