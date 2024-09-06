@@ -63,6 +63,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadCigarettesSmokedToday() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String todayKey = _getTodayKey();
+    String dailyCountsKey = "${widget.accountName}_dailyCounts";
+    String? dailyCountsData = prefs.getString(dailyCountsKey);
+    Map<String, int> dailyCounts = dailyCountsData != null ? Map<String, int>.from(json.decode(dailyCountsData)) : {};
+    
     int cigarettes = prefs.getInt(todayKey) ?? 0;
     Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(cigarettes);
   }
@@ -83,11 +87,14 @@ class _ProfilePageState extends State<ProfilePage> {
     int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked + 1;
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
 
-    await _recordCigaretteTime();
+    //await _recordCigaretteTime();
 
     _saveDailyCount(newCount);
     _checkAndResetDailyCounter();
 
+    ///qua c'era una parte in cui il contatore orario veniva incrementato-vedi repository project
+    ///forse ora lo ho chiamato currentCountH, vedi sotto, dove c'è l'if currentCountH, prima c'era hourlyCount
+    ///
     hourlyNicotine += _nicotine ?? 0.0;
 
     setState(() {
@@ -157,12 +164,13 @@ class _ProfilePageState extends State<ProfilePage> {
     return "${accountName}_hourly_nicotine_${now.year}${now.month}${now.day}${now.hour}";
   }
 
-  Future<void> _recordCigaretteTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentKey = "${widget.accountName}_${DateTime.now().toIso8601String()}";
-    prefs.setInt(currentKey, 1);
-  }
+  //Future<void> _recordCigaretteTime() async {
+  //  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //  String currentKey = "${widget.accountName}_${DateTime.now().toIso8601String()}";
+  //  prefs.setInt(currentKey, 1);
+  //}
 
+  //questi metodi qua sotto magari li teniamo, ma ci sono anche in cigaretteCOunter e forse da là li posso togliere
   Future<void> _checkAndResetHourlyCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String hourlyKey = _getHourlyKey();
@@ -272,16 +280,31 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final cigaretteProvider = Provider.of<CigaretteCounter>(context);
     return Scaffold(
+      backgroundColor: Colors.lightGreenAccent, // Light green background
       appBar: AppBar(title: Text('Profile')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Account Name: ${widget.accountName}'),
-            Text('Cigarette Type: $_cigaretteType'),
-            Text('Nicotine: $_nicotine'),
-            SizedBox(height: 20),
-            Text('Registration Date: ${_registrationDate != null ? DateTime.parse(_registrationDate!).toLocal().toString() : 'Not Available'}'),
+            Text(
+              'Hi ${widget.accountName}!',
+              style: TextStyle(
+                fontSize: 32, 
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Cigarette Type: $_cigaretteType',
+              style: TextStyle(
+                fontSize: 16, 
+              ),
+            ),
+            Text(
+              'What do you want to do?',
+              style: TextStyle(
+                fontSize: 20, 
+              ),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -291,69 +314,84 @@ class _ProfilePageState extends State<ProfilePage> {
                     builder: (context) => ModifyPage(
                       accountName: widget.accountName,
                       cigaretteType: _cigaretteType!,
-                      nicotine: _nicotine!,
+                      nicotine: 0.0,
                     ),
                   ),
                 ).then((_) {
                   _loadUserData();
                 });
               },
+              style: ElevatedButton.styleFrom(
+                side: BorderSide(color: Colors.green, width: 2), // Dark edges
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
+                textStyle: TextStyle(fontSize: 20),
+                foregroundColor: Colors.green[900], // Dark green text color
+              ),
               child: Text('Modify Profile'),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    _decrementCigaretteCount();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey, width: 2),
-                    ),
-                    child: Icon(
-                      Icons.remove,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _incrementCigaretteCount();
-                  },
-                  child: Text('Add a Cigarette'),
-                ),
-                SizedBox(width: 20),
-                Text(
-                  '${cigaretteProvider.cigarettesSmokedToday}',
-                  style: TextStyle(fontSize: 24),
-                ),
-                SizedBox(width: 20),
-                //Text(
-                //  'Hourly: ${cigaretteProvider.hourlyCigarettesSmoked}',
-                //  style: TextStyle(fontSize: 24),
-                //),
-              ],
+            
+
+            SizedBox(height: 28),
+          ElevatedButton(
+            onPressed: () {
+              _incrementCigaretteCount();
+            },
+            style: ElevatedButton.styleFrom(
+              side: BorderSide(color: Colors.green, width: 2), // Dark edges
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
+              textStyle: TextStyle(fontSize: 20), //era 20
+              foregroundColor: Colors.green[900], // Dark green text color
+
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Plots(accountName: widget.accountName),
-                  ),
-                );
-              },
-              child: Text('Your Progress'),
+            child: Text('Add a Cigarette'),
+          ),
+          SizedBox(height: 10), 
+          GestureDetector(
+            onTap: () {
+              _decrementCigaretteCount();
+            },
+            child: Container(
+              padding: EdgeInsets.all(0), 
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green, width: 2.5),
+              ),
+              child: Icon(
+                Icons.remove,
+                color: Colors.green,
+                size: 30, 
+              ),
             ),
-          ],
-        ),
+          ),
+
+          SizedBox(height: 28),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(                    builder: (context) => Plots(accountName: widget.accountName),
+                 ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              side: BorderSide(color: Colors.green, width: 2), // Dark edges
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
+              textStyle: TextStyle(fontSize: 20),
+              foregroundColor: Colors.green[900],
+            ),
+             child: Text('Your Progress'),
+          ),
+
+          SizedBox(height: 28),
+          Text(
+            'Cigarettes Smoked Today: ${cigaretteProvider.cigarettesSmokedToday}',              
+              style: TextStyle(
+              fontSize: 20, 
+            ),
+          ),
+        ],
       ),
+    ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16),
         child: Row(
@@ -361,27 +399,33 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: _showDeleteConfirmation,
-              child: Icon(Icons.delete),
+              child: Icon(Icons.delete, size: 30), 
               style: ElevatedButton.styleFrom(
-                shadowColor: Colors.red,
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                side: BorderSide(color: Colors.green, width: 2),
+                shadowColor: Colors.green,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                foregroundColor: Colors.green[900], 
               ),
             ),
             ElevatedButton(
               onPressed: _logout,
-              child: Icon(Icons.logout),
+              child: Icon(Icons.logout, size: 30), 
               style: ElevatedButton.styleFrom(
-                shadowColor: Colors.blue,
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                side: BorderSide(color: Colors.green, width: 2),
+                shadowColor: Colors.green,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                foregroundColor: Colors.green[900],
               ),
             ),
             Text(
-                  'Hourly Nicotine: ${cigaretteProvider.hourlyNicotine.toStringAsFixed(2)} mg',
-                  style: TextStyle(fontSize: 18),
-                ),
+              'Hourly Nicotine: ${cigaretteProvider.hourlyNicotine.toStringAsFixed(2)} mg',
+              style: TextStyle(fontSize: 18),
+            ),
+            
           ],
         ),
       ),
     );
   }
 }
+
