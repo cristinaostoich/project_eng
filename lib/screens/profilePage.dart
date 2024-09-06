@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _cigaretteType;
   double? _nicotine;
   String? _registrationDate;
+  String? _firstName;
 
   @override
   void initState() {
@@ -54,6 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _cigaretteType = users[accountName]['CigaretteType'];
           _nicotine = users[accountName]['Nicotine'];
           _registrationDate = users[accountName]['registrationDate'];
+          _firstName = users[accountName]['FirstName'];
         });
         _loadHourlyNicotineData();
       }
@@ -84,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String hourlyNicotineKey = _getHourlyNicotineKey();
 
     int newCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday +1;
-    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked + 1;
+    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked +1;
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
 
     //await _recordCigaretteTime();
@@ -292,6 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: Color.fromARGB(255, 79, 149, 240),
         elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white,),
       ),
 
       body: Center(
@@ -299,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Hi ${widget.accountName}!',
+              'Hi $_firstName!',
               style: TextStyle(
                 fontSize: 32, 
                 fontWeight: FontWeight.bold,
@@ -383,6 +386,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           SizedBox(height: 28),
+          Text(
+            'Cigarettes Smoked Today: ${cigaretteProvider.cigarettesSmokedToday}',              
+              style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+
+          SizedBox(height: 28),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -400,15 +412,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
              child: Text('Your Progress'),
           ),
+          
 
-          SizedBox(height: 28),
-          Text(
-            'Cigarettes Smoked Today: ${cigaretteProvider.cigarettesSmokedToday}',              
-              style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
         ],
       ),
     ),

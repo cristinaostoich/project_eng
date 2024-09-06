@@ -214,7 +214,18 @@ class _PlotsState extends State<Plots> {
 
 
     return Scaffold(
-      appBar: AppBar(title: Text('Plots')),
+      backgroundColor: Color.fromARGB(255, 79, 149, 240),
+      appBar: AppBar(
+        title: Text(
+          'Plots',
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+          ),),
+          backgroundColor: Color.fromARGB(255, 79, 149, 240),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white,),
+      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
@@ -228,7 +239,9 @@ class _PlotsState extends State<Plots> {
                       children: [
                         Text(
                           'Cigarettes smoked today: ${cigaretteCounter.cigarettesSmokedToday}/$threshold',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,),
                         ),
                       ],
                     ),
@@ -256,7 +269,9 @@ class _PlotsState extends State<Plots> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Slide horizontally to view more data',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,),
                       ),
                     ),
                   ),
@@ -265,7 +280,10 @@ class _PlotsState extends State<Plots> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,),
                     ),
                   ),
                   Container(
@@ -276,12 +294,14 @@ class _PlotsState extends State<Plots> {
                       nicotineSmokedThisHour: nicotineSmokedThisHour,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Nicotine smoked today: ${nicotineSmokedToday.toStringAsFixed(1)} / ${dailyNicotineTarget.toStringAsFixed(1)} mg',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,),
                     ),
                   ),
                 ],

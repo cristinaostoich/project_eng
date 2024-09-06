@@ -54,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
         //centerTitle: true, // Ensures the title is centered
         backgroundColor:
             Color.fromARGB(255, 79, 149, 240), // Set the same background color for AppBar
-        elevation: 0, // Remove shadow for a cleaner look
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white,), // Remove shadow for a cleaner look
       ),
 
       body: Padding(

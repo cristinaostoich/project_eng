@@ -51,14 +51,14 @@ class NicotineChart extends StatelessWidget {
         tickProviderSpec: charts.DayTickProviderSpec(increments: [1]), // Incrementi giorno per giorno
         renderSpec: charts.SmallTickRendererSpec(
           labelStyle: charts.TextStyleSpec(
-            fontSize: 12,
-            color: charts.MaterialPalette.black,
+            fontSize: 14,
+            color: charts.MaterialPalette.white,
           ),
           lineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.black,
+            color: charts.MaterialPalette.white,
           ),
           axisLineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.black,
+            color: charts.MaterialPalette.white,
           ),
         ),
         // Imposta l'intervallo dell'asse X al periodo di registrazione
@@ -73,8 +73,16 @@ class NicotineChart extends StatelessWidget {
       ),
       primaryMeasureAxis: charts.NumericAxisSpec(
         tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: 10),
+        renderSpec: charts.GridlineRendererSpec(
+          labelStyle: charts.TextStyleSpec(
+            fontSize: 14, // Imposta la dimensione del testo leggermente più grande
+            color: charts.MaterialPalette.white, // Imposta il colore del testo su bianco
+          ),
+          lineStyle: charts.LineStyleSpec(
+            color: charts.MaterialPalette.white,
+        ),
       ),
-      
+      ),
     );
   }
 
@@ -84,7 +92,7 @@ class NicotineChart extends StatelessWidget {
     return [
       charts.Series<NicotineLevel, DateTime>(
         id: 'Nicotine Level',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.white,
         domainFn: (NicotineLevel levels, _) => DateTime(levels.date.year, levels.date.month, levels.date.day), //ignores hours
         measureFn: (NicotineLevel levels, _) => levels.level,
         data: data,
@@ -140,25 +148,34 @@ class HourlyNicotineChart extends StatelessWidget {
               ),
               renderSpec: charts.SmallTickRendererSpec(
                 labelStyle: charts.TextStyleSpec(
-                  fontSize: 12,
-                  color: charts.MaterialPalette.black,
+                  fontSize: 14,
+                  color: charts.MaterialPalette.white,
                 ),
                 lineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.black,
+                  color: charts.MaterialPalette.white,
                 ),
                 axisLineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.black,
+                  color: charts.MaterialPalette.white,
                 ),
               ),
-            ),
-            primaryMeasureAxis: charts.NumericAxisSpec(
-              tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: 10),
             ),
             defaultRenderer: charts.BarRendererConfig<DateTime>(
               groupingType: charts.BarGroupingType.grouped,
               cornerStrategy: const charts.ConstCornerStrategy(20),
             ),
-
+            primaryMeasureAxis: charts.NumericAxisSpec(
+              tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: 10),
+              renderSpec: charts.GridlineRendererSpec(
+                labelStyle: charts.TextStyleSpec(
+                  fontSize: 14, // Imposta la dimensione del testo leggermente più grande
+                  color: charts.MaterialPalette.white, // Imposta il colore del testo su bianco
+                ),
+                lineStyle: charts.LineStyleSpec(
+                  color: charts.MaterialPalette.white,
+              ),
+            ),
+            ),
+            
           ),
         ),
       ],
@@ -169,7 +186,7 @@ class HourlyNicotineChart extends StatelessWidget {
     return [
       charts.Series<HourlyNicotineLevel, DateTime>(
         id: 'Hourly Nicotine Level',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.white,
         domainFn: (HourlyNicotineLevel levels, _) => DateTime(levels.time.year, levels.time.month, levels.time.day, levels.time.hour),
         measureFn: (HourlyNicotineLevel levels, _) => levels.level,
         data: data,
