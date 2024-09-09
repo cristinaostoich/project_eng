@@ -184,7 +184,10 @@ class _PlotsState extends State<Plots> {
           currentHour.month == now.month &&
           currentHour.year == now.year) {
         nicotineSmokedThisHour += cigarettes;
-        nicotineSmokedToday += cigarettes;
+        //print('cigarettes: $cigarettes');
+        //print('nicotineSmokedThisHour: $nicotineSmokedThisHour');
+        //nicotineSmokedToday += _nicotine;
+        //print('hourly nicotine 1: $nicotineSmokedToday');
       }
     }
 
@@ -193,8 +196,10 @@ class _PlotsState extends State<Plots> {
     hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
     cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
-    //nicotineSmokedToday += cigaretteCounter.hourlyNicotine.toDouble();
-    print('nicotineSmokedToday: $nicotineSmokedToday');
+    //nicotineSmokedToday += _nicotine;
+    nicotineSmokedToday += cigaretteCounter.hourlyNicotine.toDouble();
+
+    //print('nicotineSmokedToday: $nicotineSmokedToday');
 
     //adds future data (for future hours)
     DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
