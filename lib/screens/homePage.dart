@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                   textStyle: TextStyle(fontSize: 28),
                   foregroundColor: Color.fromARGB(255, 25, 73, 113), // Dark green text color
                 ),
-                child: Text('Register'),
+                child: Text('Sign up'),
                 onPressed: () {
                   Navigator.push(
                     context,

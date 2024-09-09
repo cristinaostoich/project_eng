@@ -59,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
         });
         _loadHourlyNicotineData();
       }
+      //print('cigarette type: $_cigaretteType');
     }
   }
 
@@ -412,11 +413,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
              child: Text('Your Progress'),
           ),
-          
-
+          Text(
+            'Hourly Nicotine: ${cigaretteProvider.hourlyNicotine.toStringAsFixed(2)} mg',
+            style: TextStyle(fontSize: 18),
+          ),
         ],
       ),
     ),
+    
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16),
         child: Row(
@@ -443,12 +447,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 foregroundColor: Color.fromARGB(255, 25, 73, 113),
               ),
-            ),
-            Text(
-              'Hourly Nicotine: ${cigaretteProvider.hourlyNicotine.toStringAsFixed(2)} mg',
-              style: TextStyle(fontSize: 18),
-            ),
-            
+            ),            
           ],
         ),
       ),

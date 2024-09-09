@@ -120,7 +120,7 @@ class _PlotsState extends State<Plots> {
       data = [];
 
       int totalCigarettes = 0;
-      double nicotineSmokedToday = 0.0;
+      //double nicotineSmokedToday = 0.0;
 
       int daysToGenerate = _cigarettesPerDay * 7;
       DateTime roundedDate = DateTime(now.year, now.month, now.day);
@@ -138,7 +138,7 @@ class _PlotsState extends State<Plots> {
       data.add(NicotineLevel(date: now, level: cigaretteCounter.cigarettesSmokedToday.toDouble()));
       totalCigarettes += cigaretteCounter.cigarettesSmokedToday;
 
-      nicotineSmokedToday = totalCigarettes * _nicotine;
+      //nicotineSmokedToday = totalCigarettes * _nicotine;
       int futureDays = -(now.difference(endDate).inDays);
 
       for (int i = 1; i <= futureDays; i++) {
@@ -147,7 +147,7 @@ class _PlotsState extends State<Plots> {
       }
       setState(() {
         //will be used to show the counter in the widget
-        this.nicotineSmokedToday = nicotineSmokedToday;
+        //this.nicotineSmokedToday = nicotineSmokedToday;
         this.dailyNicotineTarget = dailyNicotineTarget;
       });
     }
@@ -169,6 +169,8 @@ class _PlotsState extends State<Plots> {
     DateTime roundedHour= DateTime(now.year, now.month, now.day, now.hour);
     int cigarettesSmokedThisHour = 0;
     double nicotineSmokedThisHour = 0.0;
+    double nicotineSmokedToday = 0.0;
+
 
 
     for (int i = 0; i <= hoursToGenerate; i++) {
@@ -182,6 +184,7 @@ class _PlotsState extends State<Plots> {
           currentHour.month == now.month &&
           currentHour.year == now.year) {
         nicotineSmokedThisHour += cigarettes;
+        nicotineSmokedToday += cigarettes;
       }
     }
 
@@ -190,6 +193,8 @@ class _PlotsState extends State<Plots> {
     hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
     cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
+    //nicotineSmokedToday += cigaretteCounter.hourlyNicotine.toDouble();
+    print('nicotineSmokedToday: $nicotineSmokedToday');
 
     //adds future data (for future hours)
     DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
@@ -204,6 +209,7 @@ class _PlotsState extends State<Plots> {
     //updates state w/ hourly data
     setState(() {
       this.nicotineSmokedThisHour = nicotineSmokedThisHour;
+      this.nicotineSmokedToday = nicotineSmokedToday;
     });
   }
 

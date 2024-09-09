@@ -83,7 +83,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         backgroundColor: Color.fromARGB(255, 79, 149, 240),
         elevation: 0,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+      child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -266,9 +267,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                     );
                   }).toList(),
-                  onChanged: (value) {
-                    // Handle dropdown selection
-                  },
+                 onChanged: (newValue) {
+                  setState(() {
+                    _cigType = newValue;
+                    if (newValue == 'Light') {
+                      _nicotine = 0.5;
+                    } else if (newValue == 'Regular') {
+                      _nicotine = 1.0;
+                    } else if (newValue == 'Heavy') {
+                      _nicotine = 1.5;
+                    }
+                  });
+                },
                 ),
               ),
 
@@ -290,6 +300,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }
