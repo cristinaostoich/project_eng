@@ -23,6 +23,7 @@ class _PlotsState extends State<Plots> {
   DateTime? registrationDate;
   List<NicotineLevel> data = [];
   List<HourlyNicotineLevel> hourlyData = [];
+  List<HourlyNicotineLevel> dailyData = [];
   int _cigarettesPerDay = 0;
   int threshold = 0;
   bool isLoading = true;
@@ -120,7 +121,7 @@ class _PlotsState extends State<Plots> {
       data = [];
 
       int totalCigarettes = 0;
-      double nicotineSmokedToday = 0.0;
+      //double nicotineSmokedToday = 0.0;
 
       int daysToGenerate = _cigarettesPerDay * 7;
       DateTime roundedDate = DateTime(now.year, now.month, now.day);
@@ -137,8 +138,8 @@ class _PlotsState extends State<Plots> {
       final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
       data.add(NicotineLevel(date: now, level: cigaretteCounter.cigarettesSmokedToday.toDouble()));
       totalCigarettes += cigaretteCounter.cigarettesSmokedToday;
-      print('totalCigarettes: $totalCigarettes');
-      nicotineSmokedToday = totalCigarettes * _nicotine;
+      //print('totalCigarettes: $totalCigarettes');
+      //nicotineSmokedToday = totalCigarettes * _nicotine;
       //print('nicotineSmokedToday: $nicotineSmokedToday');
 
       //nicotineSmokedToday = totalCigarettes * _nicotine;
@@ -152,7 +153,7 @@ class _PlotsState extends State<Plots> {
         //will be used to show the counter in the widget
         //this.nicotineSmokedToday = nicotineSmokedToday;
         this.dailyNicotineTarget = dailyNicotineTarget;
-        this.nicotineSmokedToday = nicotineSmokedToday;
+        //this.nicotineSmokedToday = nicotineSmokedToday;
       });
     }
   }
@@ -165,9 +166,17 @@ class _PlotsState extends State<Plots> {
     Map<String, int> hourlyCounts = hourlyCountsData != null
         ? Map<String, int>.from(json.decode(hourlyCountsData))
         : {};
+
+    String dailyHCountsKey = "${widget.accountName}_dailyHCounts";
+    String? dailyHCountsData = prefs.getString(dailyHCountsKey);
+    Map<String, int> dailyHCounts = dailyHCountsData != null
+        ? Map<String, int>.from(json.decode(dailyHCountsData))
+        : {};
+
     DateTime now = DateTime.now();
     DateTime startOfDay = DateTime(now.year, now.month, now.day); //hourly chart refers to today's date
     hourlyData = [];
+    dailyData = [];
 
     int hoursToGenerate = 24;
     DateTime roundedHour= DateTime(now.year, now.month, now.day, now.hour);
@@ -182,6 +191,10 @@ class _PlotsState extends State<Plots> {
       String hourlyKey = "${widget.accountName}_hourly_cigarettes_${currentHour.year}${currentHour.month}${currentHour.day}${currentHour.hour}";
       double cigarettes = hourlyCounts[hourlyKey]?.toDouble() ?? 0.0;
       hourlyData.add(HourlyNicotineLevel(time: currentHour, level: cigarettes));
+
+      String dailyHKey = "${widget.accountName}_daily_cigarettes_${currentHour.year}${currentHour.month}${currentHour.day}";
+      double nicotine = dailyHCounts[dailyHKey]?.toDouble() ?? 0.0;
+      dailyData.add(HourlyNicotineLevel(time: currentHour, level: nicotine));
 
       if (currentHour.hour == now.hour &&
           currentHour.day == now.day &&
@@ -199,10 +212,11 @@ class _PlotsState extends State<Plots> {
     //adds data of current hour
     final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
     hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
+    dailyData.add(HourlyNicotineLevel(time:now, level: cigaretteCounter.dailyNicotine));
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
     cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
     //nicotineSmokedToday += _nicotine;
-    //nicotineSmokedToday += cigaretteCounter.hourlyNicotine.toDouble();
+    nicotineSmokedToday += cigaretteCounter.dailyNicotine.toDouble();
 
     //print('nicotineSmokedToday: $nicotineSmokedToday');
 
@@ -214,12 +228,14 @@ class _PlotsState extends State<Plots> {
       DateTime futureHour = now.add(Duration(hours: i));
       futureHour = DateTime(futureHour.year, futureHour.month, futureHour.day, futureHour.hour);
       hourlyData.add(HourlyNicotineLevel(time: futureHour, level: 0.0));
+      //vedi se togliere:
+      dailyData.add(HourlyNicotineLevel(time: futureHour, level: 0.0));
     }
 
     //updates state w/ hourly data
     setState(() {
       this.nicotineSmokedThisHour = nicotineSmokedThisHour;
-      //this.nicotineSmokedToday = nicotineSmokedToday;
+      this.nicotineSmokedToday = nicotineSmokedToday;
     });
   }
 
@@ -275,7 +291,7 @@ Widget build(BuildContext context) {
                           animate: true,
                           registrationDate: registrationDate!,
                           cigarettesPerDay: _cigarettesPerDay,
-                          nicotineSmokedToday: nicotineSmokedToday,
+                          //nicotineSmokedToday: nicotineSmokedToday,
                           dailyNicotineTarget: dailyNicotineTarget,
                         ),
                       ),

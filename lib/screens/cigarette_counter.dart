@@ -7,12 +7,17 @@ class CigaretteCounter with ChangeNotifier {
   double _nicotineSmokedToday = 0.0;
   int _hourlyCigarettesSmoked = 0;
   double _hourlyNicotine = 0.0;
+  int _dailyCigarettesCount = 0;
+  double _dailyNicotine = 0.0;
   DateTime _lastHourlyUpdate = DateTime.now();
+  DateTime _lastHourlyUpdateDays = DateTime.now();
 
   int get cigarettesSmokedToday => _cigarettesSmokedToday;
   double get nicotineSmokedToday => _nicotineSmokedToday;
   int get hourlyCigarettesSmoked => _hourlyCigarettesSmoked;
   double get hourlyNicotine => _hourlyNicotine;
+  int get dailyCigarettesCount => _dailyCigarettesCount;
+  double get dailyNicotine => _dailyNicotine;
 
   void incrementCigarettes() {
     _cigarettesSmokedToday++;
@@ -21,6 +26,11 @@ class CigaretteCounter with ChangeNotifier {
 
   void setCigarettes(int count) {
     _cigarettesSmokedToday = count;
+    notifyListeners();
+  }
+
+  void setDailyCigarettes(int count) {
+    _dailyCigarettesCount = count;
     notifyListeners();
   }
 
@@ -34,7 +44,15 @@ class CigaretteCounter with ChangeNotifier {
     notifyListeners();
   }
 
+   void setDailyNicotine(double nicotine) {
+      _dailyNicotine = nicotine;
+    notifyListeners();
+  }
+
   /////////PENSA SE USARE UNA FUNZIONE SIMILE ANCHE PER IL CONTEGGIO GIORNALIERO///////////////
+
+
+
   void updateHourlyCount(int count, double nicotine) async {
     DateTime now = DateTime.now();
     if (now.difference(_lastHourlyUpdate).inHours == 0) { /////////QUI ERA != 0 MA NON HA SENSO
@@ -93,13 +111,4 @@ class CigaretteCounter with ChangeNotifier {
     }
   }
 
-  String _getTodayKey() {
-    DateTime now = DateTime.now();
-    return "cigarettes_${now.year}${now.month}${now.day}";
-  }
-
-  String _getHourlyKey() {
-    DateTime now = DateTime.now();
-    return "hourly_cigarettes_${now.year}${now.month}${now.day}${now.hour}";
-  }
 }
