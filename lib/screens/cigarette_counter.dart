@@ -7,15 +7,22 @@ class CigaretteCounter with ChangeNotifier {
   double _nicotineSmokedToday = 0.0;
   int _hourlyCigarettesSmoked = 0;
   double _hourlyNicotine = 0.0;
+  int _dailyCigarettesCount = 0;
+  double _dailyNicotine = 0.0;
   DateTime _lastHourlyUpdate = DateTime.now();
+  DateTime _lastHourlyUpdateDays = DateTime.now();
 
   int get cigarettesSmokedToday => _cigarettesSmokedToday;
   double get nicotineSmokedToday => _nicotineSmokedToday;
   int get hourlyCigarettesSmoked => _hourlyCigarettesSmoked;
+  int get dailyCigarettesCount => _dailyCigarettesCount;
+  double get dailyNicotine => _dailyNicotine;
   double get hourlyNicotine => _hourlyNicotine;
 
   void incrementCigarettes() {
     _cigarettesSmokedToday++;
+    //_dailyCigarettesCount++;
+    //_hourlyCigarettesSmoked++;
     notifyListeners();
   }
 
@@ -29,27 +36,63 @@ class CigaretteCounter with ChangeNotifier {
     notifyListeners();
   }
 
+  void setDailyCigarettes(int count) {
+    _dailyCigarettesCount = count;
+    notifyListeners();
+  }
+
   void setHourlyNicotine(double nicotine) {
     _hourlyNicotine = nicotine;
     notifyListeners();
   }
 
-  /////////PENSA SE USARE UNA FUNZIONE SIMILE ANCHE PER IL CONTEGGIO GIORNALIERO///////////////
-  void updateHourlyCount(int count, double nicotine) async {
+    void setDailyNicotine(double nicotine) {
+      _dailyNicotine = nicotine;
+    notifyListeners();
+  }
+
+/////////////IN CASO TOGLI///////////////////////////////////////////
+ void updateTodayCount(int count) async {
     DateTime now = DateTime.now();
-    if (now.difference(_lastHourlyUpdate).inHours == 0) { /////////QUI ERA != 0 MA NON HA SENSO
-      _hourlyCigarettesSmoked = count;
-      _hourlyNicotine = nicotine;
+    if (now.difference(_lastHourlyUpdate).inDays == 0) {
+      _cigarettesSmokedToday = count;
       _lastHourlyUpdate = now;
-      await _saveHourlyData(count, nicotine, now); // Save the updated hourly data
     } else {
-      _hourlyCigarettesSmoked = 0; //era count
-      _hourlyNicotine = 0.0; //era nicotine
-      await _saveHourlyData(0, 0.0, now); // Save the updated hourly data, qui erano (count, nicotine, now)
+      _cigarettesSmokedToday = 0;
     }
     notifyListeners();
   }
 
+  void updateDailyCount(int count, double nicotine) async {
+    DateTime now = DateTime.now();
+    if (now.difference(_lastHourlyUpdate).inDays == 0) {
+      _dailyCigarettesCount = count;
+      _dailyNicotine = nicotine;
+      _lastHourlyUpdate = now;
+    } else {
+      _dailyCigarettesCount = 0;
+      _dailyNicotine = 0.0;
+    }
+    notifyListeners();
+  }
+
+  void updateHourlyCount(int count, double nicotine) async {
+    DateTime now = DateTime.now();
+    if (now.difference(_lastHourlyUpdate).inHours == 0) {
+      _hourlyCigarettesSmoked = count;
+      _hourlyNicotine = nicotine;
+      _lastHourlyUpdate = now;
+      await _saveHourlyData(count,nicotine,now);
+    } else {
+      _hourlyCigarettesSmoked = 0;
+      _hourlyNicotine = 0.0;
+      await _saveHourlyData(0, 0.0, now);
+    }
+    notifyListeners();
+  }
+
+
+/////////VEDI SE CANCELLARE//////////////////////////////////
   Future<void> _saveHourlyData(int count, double nicotine, DateTime now) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String key = "${now.year}${now.month}${now.day}${now.hour}";
@@ -72,15 +115,13 @@ class CigaretteCounter with ChangeNotifier {
   }
     hourlyData[key] = nicotine; // Save nicotine level
     await prefs.setString('hourlyData', json.encode(hourlyData));
-    //print('hourly data: $existingData');
   }
 
-
-  //////  posso togliere o questo o quello du profilePage mi sembra che sia, si chiama checkAndReset...
   Future<void> resetCountersIfNeeded() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime now = DateTime.now();
     DateTime lastUpdate = DateTime.parse(prefs.getString('lastHourlyUpdate') ?? now.toIso8601String());
+    DateTime lastUpdateDays = DateTime.parse(prefs.getString('lastHourlyUpdateDays') ?? now.toIso8601String());
 
     if (now.difference(lastUpdate).inHours != 0) {
       // Reset hourly counters
@@ -91,15 +132,16 @@ class CigaretteCounter with ChangeNotifier {
       await prefs.setString('lastHourlyUpdate', now.toIso8601String());
       notifyListeners();
     }
+
+    if (now.difference(lastUpdateDays).inDays != 0) {
+      // Reset hourly counters
+      _dailyCigarettesCount = 0;
+      _dailyNicotine = 0.0;
+      _lastHourlyUpdateDays = now;
+
+      await prefs.setString('lastHourlyUpdateDays', now.toIso8601String());
+      notifyListeners();
+    }
   }
 
-  String _getTodayKey() {
-    DateTime now = DateTime.now();
-    return "cigarettes_${now.year}${now.month}${now.day}";
-  }
-
-  String _getHourlyKey() {
-    DateTime now = DateTime.now();
-    return "hourly_cigarettes_${now.year}${now.month}${now.day}${now.hour}";
-  }
 }
