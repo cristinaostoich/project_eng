@@ -91,8 +91,6 @@ class CigaretteCounter with ChangeNotifier {
     notifyListeners();
   }
 
-
-/////////VEDI SE CANCELLARE//////////////////////////////////
   Future<void> _saveHourlyData(int count, double nicotine, DateTime now) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String key = "${now.year}${now.month}${now.day}${now.hour}";

@@ -55,25 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-//  Future<void> _loadHourlyNicotineData() async {
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//    String hourlyKey = _getHourlyKey();
-//    String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
-//    String? hourlyCountsData = prefs.getString(hourlyCountsKey);
-//    Map<String, int> hourlyCounts = hourlyCountsData != null ? Map<String, int>.from(json.decode(hourlyCountsData)) : {};
-    
-//    int cigarettes = prefs.getInt(hourlyKey) ?? 0;
-//    Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(cigarettes);
-
-//    String dailyHKey = _getDailyKey();
-//    String dailyHCountsKey = "${widget.accountName}_dailyHCounts";
-//    String? dailyHCountsData = prefs.getString(dailyHCountsKey);
-//    Map<String, int> dailyCounts = dailyHCountsData != null ? Map<String, int>.from(json.decode(dailyHCountsData)) : {};
-    
-//    int nicotine = prefs.getInt(dailyHKey) ?? 0;
-//    Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(nicotine);
-
-//  }
 
   Future<void> _loadHourlyNicotineData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
