@@ -50,7 +50,6 @@ class CigaretteCounter with ChangeNotifier {
     notifyListeners();
   }
 
-  /////////PENSA SE USARE UNA FUNZIONE SIMILE ANCHE PER IL CONTEGGIO GIORNALIERO///////////////
 void updateHourlyCount(int count, double nicotine) async {
   DateTime now = DateTime.now();
   
@@ -67,6 +66,7 @@ void updateHourlyCount(int count, double nicotine) async {
     _hourlyCigarettesSmoked = count;
     _hourlyNicotine = nicotine;
   }
+
   
   notifyListeners();
 }

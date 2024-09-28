@@ -172,6 +172,9 @@ class _PlotsState extends State<Plots> {
         ? Map<String, int>.from(json.decode(dailyCountsData))
         : {};
 
+          // Stampa i dati orari salvati prima di iniziare il ciclo
+    print('Dati orari salvati prima dell\'aggiornamento: $hourlyCounts');
+
     DateTime now = DateTime.now();
     DateTime startOfDay = DateTime(now.year, now.month, now.day); //hourly chart refers to today's date
     hourlyData = [];
@@ -212,8 +215,8 @@ class _PlotsState extends State<Plots> {
     final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
     hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
 
-    cigaretteCounter.updateHourlyCount(cigaretteCounter.hourlyCigarettesSmoked, cigaretteCounter.hourlyNicotine);
-    cigaretteCounter.saveHourlyData(cigaretteCounter.hourlyCigarettesSmoked, cigaretteCounter.hourlyNicotine, now);
+    updateHourlyCount(cigaretteCounter.hourlyCigarettesSmoked);
+    _saveHourlyData();
 
 
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
@@ -222,6 +225,10 @@ class _PlotsState extends State<Plots> {
     nicotineSmokedToday += cigaretteCounter.dailyNicotine.toDouble();
 
     //print('nicotineSmokedToday: $nicotineSmokedToday');
+    String updatedHourlyCountsData = prefs.getString(hourlyCountsKey) ?? '';
+    print('') ;
+    print(' ');
+    print('Dati orari aggiornati: $updatedHourlyCountsData');
 
     //adds future data (for future hours)
     DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
@@ -239,6 +246,42 @@ class _PlotsState extends State<Plots> {
       this.nicotineSmokedToday = nicotineSmokedToday;
     });
   }
+
+void updateHourlyCount(int cigarettesSmokedThisHour) async {
+  final now = DateTime.now();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
+
+  String? hourlyCountsData = prefs.getString(hourlyCountsKey);
+    Map<String, int> hourlyCounts = hourlyCountsData != null
+        ? Map<String, int>.from(json.decode(hourlyCountsData))
+        : {};
+  final currentHourKey = "${widget.accountName}_hourly_cigarettes_${now.year}${now.month}${now.day}${now.hour}";
+
+  // Aggiorna solo l'ora corrente
+  hourlyCounts[currentHourKey] = cigarettesSmokedThisHour;
+
+  // Stampa cosa viene aggiornato
+  print("Aggiornato $currentHourKey con $cigarettesSmokedThisHour sigarette.");
+}
+
+
+void _saveHourlyData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
+  String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
+
+  String? hourlyCountsData = prefs.getString(hourlyCountsKey);
+    Map<String, int> hourlyCounts = hourlyCountsData != null
+        ? Map<String, int>.from(json.decode(hourlyCountsData))
+        : {};
+  await prefs.setString(hourlyCountsKey, json.encode(hourlyCounts));
+
+  // Stampa i dati salvati
+  print("Dati salvati con saveHourlyData: ${json.encode(hourlyCounts)}");
+}
+
 
 @override
 Widget build(BuildContext context) {
