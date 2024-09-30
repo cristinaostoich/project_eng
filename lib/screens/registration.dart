@@ -22,7 +22,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // Function to validate if the password has at least one number
   bool _hasNumber(String value) {
     return value
-        .contains(RegExp(r'[0-9]')); // Check if password contains a digit
+        .contains(RegExp(r'[0-9]'));
   }
 
   Future<void> _saveData() async {
@@ -30,12 +30,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _formKey.currentState!.save();
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
-
       //retrieves data of existent users
       String? usersData = prefs.getString('users');
       Map<String, dynamic> users =
           usersData != null ? json.decode(usersData) : {};
-
 
       //checks if accountName already exists
       if (users.containsKey(_accountName)) {
@@ -48,7 +46,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         final DateTime registrationDate = DateTime.now().toUtc();
         String formattedDate = registrationDate.toIso8601String();
 
-
         //adds new user's data
         users[_accountName!] = {
           'FirstName': _firstName,
@@ -60,7 +57,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           'registrationDate': formattedDate,
         };
 
-
         //saves updated data
         await prefs.setString('users', json.encode(users));
         print('User data saved: ${users[_accountName!]}');
@@ -68,7 +64,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +99,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20 //input text color to white
+                  fontSize: 20
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -121,15 +116,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   labelText: 'Last name',
                   labelStyle: TextStyle(color: Colors.white,fontSize: 20,),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when not focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20 // Set the input text color to white
+                  fontSize: 20
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -146,15 +141,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   labelText: 'Account name',
                   labelStyle: TextStyle(color: Colors.white,fontSize: 20,),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when not focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20 // Set the input text color to white
+                  fontSize: 20
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -170,24 +165,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   labelStyle: TextStyle(color: Colors.white,fontSize: 20,),
-                  //hintText: 'Enter your password',
                   errorStyle: TextStyle(color: Colors.yellow,),
                   errorBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.yellow), // Set the underline color to yellow on error
                   ),
                   focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.yellow), // Set the underline color to yellow when the field is focused and in error
+                    borderSide: BorderSide(color: Colors.yellow),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when not focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20 // Set the input text color to white
+                  fontSize: 20
                 ),
                 obscureText: true,
                 validator: (value) {
@@ -210,15 +204,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       labelText: 'Number of cigarettes per day',
                       labelStyle: TextStyle(color: Colors.white,fontSize: 20,),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when not focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Color of the underline when focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20 // Set the input text color to white
+                  fontSize: 20
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -234,17 +228,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
               Container(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 79, 149, 240),
-                  borderRadius: BorderRadius.circular(8), // Optional: Round the corners of the container
+                  borderRadius: BorderRadius.circular(8), // round the corners of the container
                 ),
                 child: DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     labelText: 'Cigarette type',
                     labelStyle: TextStyle(color: Colors.white, fontSize: 20),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white), // Color of the underline when not focused
+                      borderSide: BorderSide(color: Colors.white),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white), // Color of the underline when focused
+                      borderSide: BorderSide(color: Colors.white),
                     ),
                     filled: true,
                     fillColor: Color.fromARGB(255, 79, 149, 240), // Set the background color of the input field to blue
@@ -252,11 +246,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   dropdownColor: Color.fromARGB(255, 79, 149, 240), // Set the dropdown menu background color to blue
                   icon: Icon(
                       Icons.arrow_drop_down, 
-                      color: Colors.white, // Imposta il colore della freccetta su bianco
+                      color: Colors.white,
                     ),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20, // Set the input text color to white
+                    fontSize: 20,
                   ),
                   items: <String>['Light', 'Regular', 'Heavy'].map((String value) {
                     return DropdownMenuItem<String>(
@@ -287,10 +281,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 onPressed: _saveData,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 118, 174, 249),
-                  side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
+                  side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
                   textStyle: TextStyle(fontSize: 20),
-                  //foregroundColor: Color.fromARGB(255, 25, 73, 113),
                   foregroundColor: Color.fromARGB(255, 25, 73, 113),
                 ),
                 child: Text('Sign up'),

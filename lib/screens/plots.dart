@@ -105,8 +105,7 @@ class _PlotsState extends State<Plots> {
       data = [];
 
       int totalCigarettes = 0;
-      //double nicotineSmokedToday = 0.0;
-
+      
       int daysToGenerate = _cigarettesPerDay * 7;
       DateTime roundedDate = DateTime(now.year, now.month, now.day);
 
