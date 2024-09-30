@@ -50,7 +50,6 @@ class _ProfilePageState extends State<ProfilePage> {
         });
         _loadHourlyNicotineData();
       }
-      //print('cigarette type: $_cigaretteType');
     }
   }
 
@@ -61,17 +60,10 @@ class _ProfilePageState extends State<ProfilePage> {
     
     String dailyNicotineKey = _getDailyNicotineKey();
     double dailyNicotine = prefs.getDouble(dailyNicotineKey) ?? 0.0;
-    //String dailyCountKey = "${widget.accountName}_dailyHCounts";
-    //String? dailyCountData = prefs.getString(dailyCountKey);
-    //Map<String, int> dailyCount = dailyCountData != null ? Map<String, int>.from(json.decode(dailyCountData)) : {};
-    //int count = prefs.getInt(dailyCountKey) ?? 0;
-
 
     setState(() {
       Provider.of<CigaretteCounter>(context, listen: false).setHourlyNicotine(hourlyNicotine);
       Provider.of<CigaretteCounter>(context, listen: false).setDailyNicotine(dailyNicotine);
-      //Provider.of<CigaretteCounter>(context, listen: false).setDailyCigarettes(count);
-
     });
   }
 
@@ -98,22 +90,15 @@ class _ProfilePageState extends State<ProfilePage> {
     int newCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday +1;
     int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked +1;
     int dailyCount = Provider.of<CigaretteCounter>(context, listen: false).dailyCigarettesCount +1;
-    //print('newCount: $newCount');
-    //print('current daily count: $dailyCount'); //------> è 0
-    //print('current count H: $newCountH');
-
 
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
     double dailyNicotine = prefs.getDouble(dailyNicotineKey) ?? 0.0;
-
-    //await _recordCigaretteTime();
 
     _saveDailyCount(newCount);
     _checkAndResetDailyCounter();
 
     hourlyNicotine += _nicotine ?? 0.0;
     dailyNicotine += _nicotine ?? 0.0;
-    //print('daily nicotine: $dailyNicotine');
 
     setState(() {
       prefs.setInt(todayKey, newCount);
@@ -143,26 +128,18 @@ class _ProfilePageState extends State<ProfilePage> {
     int currentCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday;
     int currentCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked;
     int currentDailyCount = Provider.of<CigaretteCounter>(context, listen: false).dailyCigarettesCount;
-    print('current daily count: $currentDailyCount'); //------> è 0
-    print('current count H: $currentCountH');
 
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
     double dailyNicotine = prefs.getDouble(dailyNicotineKey) ?? 0.0;
-    //print('daily nicotine: $dailyNicotine');
 
     if (currentCount > 0) {
       int newCount = currentCount - 1;
-      //print('daily nicotine: $dailyNicotine');
       setState(() {
         prefs.setInt(todayKey, newCount);
         Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(newCount);
       });
       _saveDailyCount(newCount);
-      //_checkAndResetDailyCounter();
-      //print('daily nicotine: $dailyNicotine');
-      
-      
-      /////////VEDI SE QUESTO IF VA QUA O ALTROVE
+
       if (currentDailyCount > 0) {
         int dailyCount = currentDailyCount - 1;
         if (dailyNicotine >= (_nicotine ?? 0.0)) {
@@ -180,7 +157,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
         });
         _checkAndResetDailyCounter();
-        //print('daily nicotine: $dailyNicotine');
       }
 
       if (currentCountH > 0) {
@@ -190,7 +166,6 @@ class _ProfilePageState extends State<ProfilePage> {
         } else {
           hourlyNicotine = 0.0;
         }
-        //print('hourlyNicotine: $hourlyNicotine');
 
         setState(() {
           prefs.setInt(hourlyKey, newCountH);
@@ -198,16 +173,11 @@ class _ProfilePageState extends State<ProfilePage> {
           Provider.of<CigaretteCounter>(context, listen: false).setHourlyCigarettes(newCountH);
           Provider.of<CigaretteCounter>(context, listen: false).setHourlyNicotine(hourlyNicotine);
           Provider.of<CigaretteCounter>(context, listen: false).updateHourlyCount(newCountH, hourlyNicotine);
-
-          
         });
 
         _saveHourlyCount(newCountH);
         _checkAndResetHourlyCounter();
       }
-
-      
-
       setState(() {});
     }
   }
@@ -242,19 +212,11 @@ class _ProfilePageState extends State<ProfilePage> {
       return "${accountName}_daily_nicotine_${now.year}${now.month}${now.day}";
     }
 
-  //Future<void> _recordCigaretteTime() async {
-  //  SharedPreferences prefs = await SharedPreferences.getInstance();
-  //  String currentKey = "${widget.accountName}_${DateTime.now().toIso8601String()}";
-  //  prefs.setInt(currentKey, 1);
-  //}
-
-  //questi metodi qua sotto magari li teniamo, ma ci sono anche in cigaretteCOunter e forse da là li posso togliere
   Future<void> _checkAndResetHourlyCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String hourlyKey = _getHourlyKey();
     String hourlyNicotineKey = _getHourlyNicotineKey();
-    //String dailyKey = _getDailyKey();
-    //String dailyNicotineKey = _getDailyNicotineKey();
+
     String lastUpdateKey = "${widget.accountName}_lastHourlyUpdate";
     DateTime now = DateTime.now();
 
@@ -276,7 +238,6 @@ class _ProfilePageState extends State<ProfilePage> {
     DateTime now = DateTime.now();
 
     DateTime lastUpdateDays = DateTime.parse(prefs.getString(lastUpdateKeyDays) ?? now.toIso8601String());
-    //DateTime tomorrow = DateTime(now.year, now.month, now.day + 1);
 
     if (now.difference(lastUpdateDays).inDays != 0) {
       prefs.setInt(dailyKey, 0);
@@ -329,18 +290,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
             if (accountName != null) {
-              // Recupera i dati degli utenti
+              //retrieves user's data
               String? usersData = prefs.getString('users');
               Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
 
 
-              // Rimuovi solo i dati dell'utente specifico
+              //removes data of the specific user
               if (users.containsKey(accountName)) {
-                users.remove(accountName); // Rimuovi solo i dati dell'utente corrente
+                users.remove(accountName);
                 await prefs.setString('users', json.encode(users));
               }
 
-              // Rimuovi il login
+              //removes login
               await prefs.remove('loggedInAccount');
             }
 
@@ -367,7 +328,6 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text(
           'Profile',
-          //textAlign:TextAlign.center,
           style: TextStyle(
             fontSize: 30,
             color: Colors.white,
@@ -439,7 +399,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 118, 174, 249),
-              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
+              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
               textStyle: TextStyle(fontSize: 20),
               foregroundColor: Color.fromARGB(255, 25, 73, 113),
@@ -480,13 +440,14 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(                    builder: (context) => Plots(accountName: widget.accountName),
+                MaterialPageRoute(
+                  builder: (context) => Plots(accountName: widget.accountName),
                  ),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 118, 174, 249),
-              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
+              side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
               textStyle: TextStyle(fontSize: 20),
               foregroundColor: Color.fromARGB(255, 25, 73, 113),

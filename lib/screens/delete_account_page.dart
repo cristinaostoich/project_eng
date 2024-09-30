@@ -40,7 +40,7 @@ class DeleteAccountPage extends StatelessWidget {
                   child: Text('Yes'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 118, 174, 249),
-                    side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
+                    side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
                     textStyle: TextStyle(fontSize: 20),
                     foregroundColor: Color.fromARGB(255, 25, 73, 113),
@@ -52,7 +52,7 @@ class DeleteAccountPage extends StatelessWidget {
                   child: Text('No'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 118, 174, 249),
-                    side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1), // Dark edges
+                    side: BorderSide(color: Color.fromARGB(255, 35, 99, 150), width: 1),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
                     textStyle: TextStyle(fontSize: 20),
                     foregroundColor: Color.fromARGB(255, 25, 73, 113),

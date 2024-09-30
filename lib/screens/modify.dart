@@ -86,7 +86,6 @@ class _ModifyPageState extends State<ModifyPage> {
           style: TextStyle(
             fontSize: 30,
             color: Colors.white,
-            //fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor:
@@ -129,13 +128,13 @@ class _ModifyPageState extends State<ModifyPage> {
                       color: Colors.white,
                       fontSize: 18,
                     )),
-                  SizedBox(width: 18), // Spacer between text and dropdown
+                  SizedBox(width: 18),
                   DropdownButton<String>(
                     value: _selectedCigaretteType,
                     dropdownColor: Color.fromARGB(255, 118, 174, 249),
                     icon: Icon(
                       Icons.arrow_drop_down, 
-                      color: Colors.white, //arrow color
+                      color: Colors.white,
                     ),
                     onChanged: (newValue) {
                       setState(() {

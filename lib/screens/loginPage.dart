@@ -39,20 +39,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // set background color
       backgroundColor: Color.fromARGB(255, 79, 149, 240),
       appBar: AppBar(
         title: Text(
           'Login',
           style: TextStyle(
-            fontSize: 30, // Bigger font size for the title
+            fontSize: 30,
             color: Colors.white,
-            //fontWeight: FontWeight.bold,
           ),
         ),
-        //centerTitle: true,
         backgroundColor:
-            Color.fromARGB(255, 79, 149, 240), // Set the same background color for AppBar
+            Color.fromARGB(255, 79, 149, 240),
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white,),
       ),
@@ -72,10 +69,10 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), //color of the line below the text
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), //color of the line when the field is in focus
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 style: TextStyle(
@@ -125,8 +122,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 50),
               SizedBox(
-                width: 150, // Increase button width
-                height: 50, // Increase button height
+                width: 150,
+                height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 118, 174, 249),
