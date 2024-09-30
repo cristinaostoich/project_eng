@@ -88,9 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
     String dailyNicotineKey = _getDailyNicotineKey();
 
     int newCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday +1;
-    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked;
-    int dailyCount = Provider.of<CigaretteCounter>(context, listen: false).dailyCigarettesCount;
-
+    int newCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked +1;
+    int dailyCount = Provider.of<CigaretteCounter>(context, listen: false).dailyCigarettesCount +1;
 
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
     double dailyNicotine = prefs.getDouble(dailyNicotineKey) ?? 0.0;
@@ -129,8 +128,6 @@ class _ProfilePageState extends State<ProfilePage> {
     int currentCount = Provider.of<CigaretteCounter>(context, listen: false).cigarettesSmokedToday;
     int currentCountH = Provider.of<CigaretteCounter>(context, listen: false).hourlyCigarettesSmoked;
     int currentDailyCount = Provider.of<CigaretteCounter>(context, listen: false).dailyCigarettesCount;
-    print('current daily count: $currentDailyCount');
-    print('current count H: $currentCountH');
 
     double hourlyNicotine = prefs.getDouble(hourlyNicotineKey) ?? 0.0;
     double dailyNicotine = prefs.getDouble(dailyNicotineKey) ?? 0.0;
@@ -142,7 +139,6 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<CigaretteCounter>(context, listen: false).setCigarettes(newCount);
       });
       _saveDailyCount(newCount);
-      
 
       if (currentDailyCount > 0) {
         int dailyCount = currentDailyCount - 1;
@@ -220,6 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String hourlyKey = _getHourlyKey();
     String hourlyNicotineKey = _getHourlyNicotineKey();
+
     String lastUpdateKey = "${widget.accountName}_lastHourlyUpdate";
     DateTime now = DateTime.now();
 
@@ -298,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
 
 
-              //removes data of specific user
+              //removes data of the specific user
               if (users.containsKey(accountName)) {
                 users.remove(accountName);
                 await prefs.setString('users', json.encode(users));
