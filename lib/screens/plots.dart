@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'cigarette_counter.dart';
 import 'package:progetto/charts/plot_creation.dart';
 
+
 class Plots extends StatefulWidget {
   final String accountName;
 
@@ -46,8 +47,8 @@ class _PlotsState extends State<Plots> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? usersData = prefs.getString('users');
 
-      Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
 
+      Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
 
       if (users.containsKey(widget.accountName)) {
         var userProfile = users[widget.accountName];
@@ -104,6 +105,7 @@ class _PlotsState extends State<Plots> {
       data = [];
 
       int totalCigarettes = 0;
+      //double nicotineSmokedToday = 0.0;
 
       int daysToGenerate = _cigarettesPerDay * 7;
       DateTime roundedDate = DateTime(now.year, now.month, now.day);
@@ -148,7 +150,6 @@ class _PlotsState extends State<Plots> {
         ? Map<String, int>.from(json.decode(dailyCountsData))
         : {};
 
-
     DateTime now = DateTime.now();
     DateTime startOfDay = DateTime(now.year, now.month, now.day); //hourly chart refers to today's date
     hourlyData = [];
@@ -176,11 +177,6 @@ class _PlotsState extends State<Plots> {
     //adds data of current hour
     final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
     hourlyData.add(HourlyNicotineLevel(time: now, level: cigaretteCounter.hourlyNicotine));
-
-    updateHourlyCount(cigaretteCounter.hourlyCigarettesSmoked);
-    _saveHourlyData();
-
-
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
     cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
     nicotineSmokedToday += cigaretteCounter.dailyNicotine.toDouble();
@@ -201,35 +197,6 @@ class _PlotsState extends State<Plots> {
       this.nicotineSmokedToday = nicotineSmokedToday;
     });
   }
-
-void updateHourlyCount(int cigarettesSmokedThisHour) async {
-  final now = DateTime.now();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
-
-  String? hourlyCountsData = prefs.getString(hourlyCountsKey);
-    Map<String, int> hourlyCounts = hourlyCountsData != null
-        ? Map<String, int>.from(json.decode(hourlyCountsData))
-        : {};
-  final currentHourKey = "${widget.accountName}_hourly_cigarettes_${now.year}${now.month}${now.day}${now.hour}";
-
-  //updates current hour
-  hourlyCounts[currentHourKey] = cigarettesSmokedThisHour;
-}
-
-
-void _saveHourlyData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
-
-  String? hourlyCountsData = prefs.getString(hourlyCountsKey);
-    Map<String, int> hourlyCounts = hourlyCountsData != null
-        ? Map<String, int>.from(json.decode(hourlyCountsData))
-        : {};
-  await prefs.setString(hourlyCountsKey, json.encode(hourlyCounts));
-}
-
 
 @override
 Widget build(BuildContext context) {
@@ -252,7 +219,7 @@ Widget build(BuildContext context) {
     ),
     body: isLoading
         ? Center(child: CircularProgressIndicator())
-        : SingleChildScrollView( // Avvolgi il contenuto con un SingleChildScrollView
+        : SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Column(
@@ -302,7 +269,7 @@ Widget build(BuildContext context) {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20), // Spazio tra i grafici
+                  SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -315,7 +282,7 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.3, // Altezza ridotta
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: HourlyNicotineChart(
                       HourlyNicotineChart.createSampleData(hourlyData),
                       animate: true,
