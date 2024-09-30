@@ -1,4 +1,3 @@
-//import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -6,13 +5,10 @@ import 'package:provider/provider.dart';
 import 'cigarette_counter.dart';
 import 'package:progetto/charts/plot_creation.dart';
 
-
 class Plots extends StatefulWidget {
   final String accountName;
 
-
   Plots({required this.accountName});
-
 
   @override
   _PlotsState createState() => _PlotsState();
@@ -27,7 +23,7 @@ class _PlotsState extends State<Plots> {
   int _cigarettesPerDay = 0;
   int threshold = 0;
   bool isLoading = true;
-  double nicotineSmokedToday = 0.0; //questa variabile va bene e non va modificata nel resto del codice
+  double nicotineSmokedToday = 0.0;
   double _nicotine = 0.0;
   double nicotineSmokedThisHour = 0.0;
   double dailyNicotineTarget = 0.0;
@@ -38,32 +34,19 @@ class _PlotsState extends State<Plots> {
     super.initState();
     _loadRegistrationData();
 
-    ////////////////RIMETTI IN CASO/////////////////
-    //Aggiorna i contatori all'avvio della schermata
+    //updates counters when screen starts
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
       cigaretteCounter.resetCountersIfNeeded();
     });
   }
 
-  //@override
-  //void didChangeDependencies() {
-  //  super.didChangeDependencies();
-
-    // Assicurati che i contatori siano aggiornati ogni volta che cambia lo stato
-  //  final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
-  //  cigaretteCounter.resetCountersIfNeeded();
-  //}
-
-
   Future<void> _loadRegistrationData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? usersData = prefs.getString('users');
 
-
       Map<String, dynamic> users = usersData != null ? json.decode(usersData) : {};
-      //final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen:false);
 
 
       if (users.containsKey(widget.accountName)) {
@@ -110,7 +93,7 @@ class _PlotsState extends State<Plots> {
     String dailyCountsKey = "${widget.accountName}_dailyCounts";
     String? dailyCountsData = prefs.getString(dailyCountsKey);
     Map<String, int> dailyCounts = dailyCountsData != null ? Map<String, int>.from(json.decode(dailyCountsData)) : {};
-    double dailyNicotineTarget = threshold * _nicotine; // Calcola la soglia giornaliera
+    double dailyNicotineTarget = threshold * _nicotine;
 
 
     if (registrationDate != null) {
@@ -121,7 +104,6 @@ class _PlotsState extends State<Plots> {
       data = [];
 
       int totalCigarettes = 0;
-      //double nicotineSmokedToday = 0.0;
 
       int daysToGenerate = _cigarettesPerDay * 7;
       DateTime roundedDate = DateTime(now.year, now.month, now.day);
@@ -138,11 +120,7 @@ class _PlotsState extends State<Plots> {
       final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
       data.add(NicotineLevel(date: now, level: cigaretteCounter.cigarettesSmokedToday.toDouble()));
       totalCigarettes += cigaretteCounter.cigarettesSmokedToday;
-      //print('totalCigarettes: $totalCigarettes');
-      //nicotineSmokedToday = totalCigarettes * _nicotine;
-      //print('nicotineSmokedToday: $nicotineSmokedToday');
 
-      //nicotineSmokedToday = totalCigarettes * _nicotine;
       int futureDays = -(now.difference(endDate).inDays);
 
       for (int i = 1; i <= futureDays; i++) {
@@ -151,9 +129,7 @@ class _PlotsState extends State<Plots> {
       }
       setState(() {
         //will be used to show the counter in the widget
-        //this.nicotineSmokedToday = nicotineSmokedToday;
         this.dailyNicotineTarget = dailyNicotineTarget;
-        //this.nicotineSmokedToday = nicotineSmokedToday;
       });
     }
   }
@@ -172,8 +148,6 @@ class _PlotsState extends State<Plots> {
         ? Map<String, int>.from(json.decode(dailyCountsData))
         : {};
 
-          // Stampa i dati orari salvati prima di iniziare il ciclo
-    print('Dati orari salvati prima dell\'aggiornamento: $hourlyCounts');
 
     DateTime now = DateTime.now();
     DateTime startOfDay = DateTime(now.year, now.month, now.day); //hourly chart refers to today's date
@@ -197,18 +171,6 @@ class _PlotsState extends State<Plots> {
       String dailyKey = "${widget.accountName}_daily_cigarettes_${currentHour.year}${currentHour.month}${currentHour.day}";
       double nicotine = dailyCounts[dailyKey]?.toDouble() ?? 0.0;
       dailyData.add(HourlyNicotineLevel(time: currentHour, level: nicotine));
-
-      if (currentHour.hour == now.hour &&
-          currentHour.day == now.day &&
-          currentHour.month == now.month &&
-          currentHour.year == now.year) {
-        //nicotineSmokedThisHour += cigarettes;
-        //nicotineSmokedToday += cigarettes;
-        //print('cigarettes: $cigarettes');
-        //print('nicotineSmokedToday: $nicotineSmokedToday');
-        //nicotineSmokedToday += _nicotine;
-        //print('hourly nicotine 1: $nicotineSmokedToday');
-      }
     }
 
     //adds data of current hour
@@ -221,14 +183,7 @@ class _PlotsState extends State<Plots> {
 
     nicotineSmokedThisHour += cigaretteCounter.hourlyNicotine.toDouble();
     cigarettesSmokedThisHour += cigaretteCounter.hourlyCigarettesSmoked;
-    //nicotineSmokedToday += _nicotine;
     nicotineSmokedToday += cigaretteCounter.dailyNicotine.toDouble();
-
-    //print('nicotineSmokedToday: $nicotineSmokedToday');
-    String updatedHourlyCountsData = prefs.getString(hourlyCountsKey) ?? '';
-    print('') ;
-    print(' ');
-    print('Dati orari aggiornati: $updatedHourlyCountsData');
 
     //adds future data (for future hours)
     DateTime tomorrow = DateTime(now.year, now.month, now.day +1);
@@ -259,17 +214,13 @@ void updateHourlyCount(int cigarettesSmokedThisHour) async {
         : {};
   final currentHourKey = "${widget.accountName}_hourly_cigarettes_${now.year}${now.month}${now.day}${now.hour}";
 
-  // Aggiorna solo l'ora corrente
+  //updates current hour
   hourlyCounts[currentHourKey] = cigarettesSmokedThisHour;
-
-  // Stampa cosa viene aggiornato
-  print("Aggiornato $currentHourKey con $cigarettesSmokedThisHour sigarette.");
 }
 
 
 void _saveHourlyData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final cigaretteCounter = Provider.of<CigaretteCounter>(context, listen: false);
   String hourlyCountsKey = "${widget.accountName}_hourlyCounts";
 
   String? hourlyCountsData = prefs.getString(hourlyCountsKey);
@@ -277,9 +228,6 @@ void _saveHourlyData() async {
         ? Map<String, int>.from(json.decode(hourlyCountsData))
         : {};
   await prefs.setString(hourlyCountsKey, json.encode(hourlyCounts));
-
-  // Stampa i dati salvati
-  print("Dati salvati con saveHourlyData: ${json.encode(hourlyCounts)}");
 }
 
 
